@@ -47,5 +47,7 @@ int main(int argc, const char** argv)
 
 	} while (waitKey(10) != KEY_ESC);
 
+	delete detector;
+
 	return 0;
 }
