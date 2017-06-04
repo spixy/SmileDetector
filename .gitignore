@@ -1,0 +1,8 @@
+/packages/
+SmileControl/x64/Release/
+SmileControl/x64/Debug/
+x64/Release/
+x64/Debug/
+x64/haarcascades/
+SmileControl.VC.db
+SmileControl.VC.VC.opendb

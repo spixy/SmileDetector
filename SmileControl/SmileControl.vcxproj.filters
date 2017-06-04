@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="haarcascades">
+      <UniqueIdentifier>{bb6b706a-b399-40d6-a7e5-164a2b71ef71}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SmileDetector.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EyeDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectorBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="haarcascades\haarcascade_upperbody.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_eye.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_eye_tree_eyeglasses.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_frontalcatface.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_frontalcatface_extended.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_frontalface_alt.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_frontalface_alt_tree.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_frontalface_alt2.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_frontalface_default.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_fullbody.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_lefteye_2splits.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_licence_plate_rus_16stages.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_lowerbody.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_profileface.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_righteye_2splits.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_russian_plate_number.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+    <Xml Include="haarcascades\haarcascade_smile.xml">
+      <Filter>haarcascades</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>
