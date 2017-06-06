@@ -161,8 +161,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DetectorBase.h" />
-    <ClInclude Include="EyeDetector.h" />
+    <ClInclude Include="SmileComparer.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="haarcascades\haarcascade_eye.xml">
