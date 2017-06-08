@@ -8,8 +8,6 @@ using namespace std;
 
 int start_app(VideoCapture & video_capture, string smilePath, string sadPath, bool post_process);
 void process_result(SmileComparer::SmileResult result, SmileComparer::SmileResult last_result);
-Mat process_gray_image(const Mat & img);
-
 
 int main(int argc, const char ** argv)
 {
