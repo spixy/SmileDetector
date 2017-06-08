@@ -6,15 +6,18 @@
 using namespace cv;
 using namespace std;
 
-int start_app(VideoCapture & video_capture, string smilePath, string sadPath, bool post_process);
-void process_result(SmileComparer::SmileResult result, SmileComparer::SmileResult last_result);
+int start_app(VideoCapture & video_capture, string smilePath, string sadPath, bool post_process, bool process_once, bool show_camera);
+SmileComparer::SmileResult get_result(SmileComparer::SmileResult result, SmileComparer::SmileResult last_result);
+
+const int CODE_HAPPY = 200;
+const int CODE_SAD = 400;
 
 int main(int argc, const char ** argv)
 {
-	VideoCapture video_capture;
-	video_capture.open(0);
+	VideoCapture videoCapture;
+	videoCapture.open(0);
 
-	if (!video_capture.isOpened())
+	if (!videoCapture.isOpened())
 	{
 		cerr << "VideoCapture not opened" << endl;
 		return 4;
@@ -23,23 +26,44 @@ int main(int argc, const char ** argv)
 	string smilePath = happy_template_path;
 	string sadPath = sad_template_path;
 	bool postProcess = post_process_default;
-
-	namedWindow(window_rgb);
-
+	bool processOnce = process_once_default;
+	bool showCamera = show_camera_default;
+	
 	switch (argc)
 	{
 		case 2:
 			if (strcmp(argv[1], "learn") == 0)
 			{
-				Learner learner(video_capture);
+				Learner learner(videoCapture);
 				if (!learner.Learn(smilePath, sadPath, postProcess))
 					return 1;
+			}
+			else if (strcmp(argv[1], "once") == 0)
+			{
+				processOnce = true;
+			}
+			else if (strcmp(argv[1], "help") == 0 || strcmp(argv[1], "/?") == 0 || strcmp(argv[1], "--help") == 0)
+			{
+				cout << "USAGE:" << endl;
+				cout << "  help  - displays help" << endl;
+				cout << "  learn - captures happy and sad templates" << endl;
+				cout << "  once  - stops after captured face state, returns 0 - happy, 1 - sad or 2 - error" << endl;
+				cout << "  nocam - to not show capture window, used with parameter 'once' only" << endl;
+				cout << "  HAPPY_PATH SAD_PATH - overides template paths, used with parameter 'learn' or none" << endl;
 			}
 			break;
 
 		case 3:
-			smilePath = string(argv[1]);
-			sadPath = string(argv[2]);
+			if (strcmp(argv[1], "once") == 0 && strcmp(argv[2], "nocam") == 0)
+			{
+				processOnce = true;
+				showCamera = false;
+			}
+			else
+			{
+				smilePath = string(argv[1]);
+				sadPath = string(argv[2]);
+			}
 			break;
 
 		case 4:
@@ -48,7 +72,7 @@ int main(int argc, const char ** argv)
 				smilePath = string(argv[2]);
 				sadPath = string(argv[3]);
 
-				Learner learner(video_capture);
+				Learner learner(videoCapture);
 				if (!learner.Learn(smilePath, sadPath, postProcess))
 					return 1;
 			}
@@ -58,13 +82,28 @@ int main(int argc, const char ** argv)
 	int result;
 	do
 	{
-		result = start_app(video_capture, smilePath, sadPath, postProcess);
+		result = start_app(videoCapture, smilePath, sadPath, postProcess, processOnce, showCamera);
 	} while (result == 2);
+
+	if (processOnce)
+	{
+		switch (result)
+		{
+			case CODE_HAPPY:
+				return 0;
+
+			case CODE_SAD:
+				return 1;
+
+			default: // error
+				return 2;
+		}
+	}
 
 	return result;
 }
 
-int start_app(VideoCapture & video_capture, string smile_path, string sad_path, bool post_process)
+int start_app(VideoCapture & video_capture, string smile_path, string sad_path, bool post_process, bool process_once, bool show_camera)
 {
 	SmileDetector * detector;
 	try
@@ -74,7 +113,7 @@ int start_app(VideoCapture & video_capture, string smile_path, string sad_path, 
 	catch (exception ex)
 	{
 		cerr << ex.what() << endl;
-		return 3;
+		return 1;
 	}
 
 	SmileComparer * comparer;
@@ -89,7 +128,7 @@ int start_app(VideoCapture & video_capture, string smile_path, string sad_path, 
 
 		Learner learner(video_capture);
 		if (learner.Learn(smile_path, sad_path, post_process))
-			return 2;
+			return 2; // app is restarting
 		else
 			return 1;
 	}
@@ -117,15 +156,52 @@ int start_app(VideoCapture & video_capture, string smile_path, string sad_path, 
 		{
 			Mat smile_image = post_process ? process_gray_image(gray_img(smile_rect)) : gray_img(smile_rect);
 			result = comparer->Compare(smile_image);
-
-			process_result(result, last_result);
 		}
 		else
 		{
 			result = SmileComparer::SmileResult::None;
 		}
 
-		imshow(window_rgb, rgb_img);
+		switch (get_result(result, last_result))
+		{
+			case SmileComparer::SmileResult::Happy:
+				if (process_once)
+				{
+					delete detector;
+					delete comparer;
+					return CODE_HAPPY;
+				}
+				else
+				{
+					cout << ":)" << endl;
+				}
+				break;
+
+			case SmileComparer::SmileResult::Sadness:
+				if (process_once)
+				{
+					delete detector;
+					delete comparer;
+					return CODE_SAD;
+				}
+				else
+				{
+					cout << ":(" << endl;
+				}
+				break;
+
+			case SmileComparer::SmileResult::None:
+				if (!process_once)
+				{
+					cout << ":(" << endl;
+				}
+				break;
+		}
+
+		if (show_camera)
+		{
+			imshow(window_rgb, rgb_img);
+		}
 
 		last_result = result;
 
@@ -137,35 +213,14 @@ int start_app(VideoCapture & video_capture, string smile_path, string sad_path, 
 	return 0;
 }
 
-void process_result(SmileComparer::SmileResult result, SmileComparer::SmileResult last_result)
+SmileComparer::SmileResult get_result(SmileComparer::SmileResult result, SmileComparer::SmileResult last_result)
 {
-	switch (result)
+	if (result == SmileComparer::None)
 	{
-		case SmileComparer::None:
-			if (last_result == SmileComparer::Happy)
-			{
-				cout << ":)" << endl;
-			}
-			else if (last_result == SmileComparer::Sadness)
-			{
-				cout << ":(" << endl;
-			}
-			else
-			{
-				cout << ":|" << endl;
-			}
-			break;
-
-		case SmileComparer::Happy:
-			cout << ":)" << endl;
-			break;
-
-		case SmileComparer::Sadness:
-			cout << ":(" << endl;
-			break;
-
-		default:
-			cerr << "Error: Incorrect data" << endl;
-			break;
+		return last_result;
+	}
+	else
+	{
+		return result;
 	}
 }

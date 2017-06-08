@@ -11,6 +11,8 @@ const string happy_template_path = "template_happy.jpg";
 const string sad_template_path = "template_sad.jpg";
 const Scalar smile_rect_color = Scalar(0, 255, 0);
 const bool post_process_default = true;
+const bool show_camera_default = true;
+const bool process_once_default = true;
 const int KEY_ESC = 27;
 
 Mat process_gray_image(const Mat & img)
