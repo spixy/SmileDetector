@@ -161,6 +161,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="utility.h" />
+    <ClInclude Include="Learner.h" />
     <ClInclude Include="SmileComparer.h" />
   </ItemGroup>
   <ItemGroup>
